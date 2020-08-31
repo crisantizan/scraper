@@ -1,13 +1,13 @@
 from urllib.parse import urlsplit
 
 
-def get_domain(url):
+def split_url(url):
 	"""Get domain from url
 
 	Args:
 		url (string): target URL
 
 	Returns:
-		string: URL domain
+		SplitResult: URL parts
 	"""
-	return urlsplit(url).netloc
+	return urlsplit(url)

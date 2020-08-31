@@ -11,14 +11,25 @@ class AnimeFlvSite(Scraper):
             url=url,
             xpath_expressions={
                 'total_episodes': '//ul[@id="episodeList"]/li[@class="fa-play-circle"][1]/a/p/text()'
-            }
+            },
         )
 
     @classmethod
     def validateDomain(self, url):
         return re.match(self.domain, url) is not None
 
+    def _format_url(self, num, url):
+        # https://www3.animeflv.net/ver/boruto-naruto-next-generations-tv-161
+        path = url.path.replace('/anime', '')
+        return f'{url.scheme}://{url.netloc}/ver{path}-{num}'
+
     def start(self):
         total = self.get_total_episodes(lambda res: int(res.split(' ')[1]))
+        links = self.generate_links(
+            total_episodes=total,
+            callback=self._format_url
+        )
         print(f'TOTAL: {total}')
+        print(links)
+
         self.browser.quit()

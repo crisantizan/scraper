@@ -4,14 +4,14 @@ import sys
 
 from lxml import html
 
-from helper import get_domain
+import helper
 
 
 class Scraper:
     def __init__(self, browser, url, xpath_expressions):
         self.browser = browser
         self.url = url
-        self.domain = get_domain(url=url)
+        self.url_parts = helper.split_url(url=url)
         self.xpath = xpath_expressions
 
         self._validate_xpath_dict()
@@ -32,6 +32,13 @@ class Scraper:
         )
 
         return callback(response)
+
+    def generate_links(self, total_episodes, callback):
+        links = []
+        for episode in range(1, total_episodes + 1):
+            links.append(callback(episode, self.url_parts))
+
+        return links
 
     def _scrape(self, xpath_expression):
         # get the innerhtml from the rendered page
