@@ -7,7 +7,7 @@ class Browser:
         self._headless = headless
 
     @property
-    def driver(self):
+    def browser(self):
         option = webdriver.ChromeOptions()
 
         if self._headless:

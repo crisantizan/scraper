@@ -1,14 +1,20 @@
 import time
-from lxml import html
 import os
+import sys
+
+from lxml import html
+
 from helper import get_domain
 
 
 class Scraper:
-    def __init__(self, browser, main_url):
+    def __init__(self, browser, url, xpath_expressions):
         self.browser = browser
-        self.main_url = main_url
-        self.domain = get_domain(url=main_url)
+        self.url = url
+        self.domain = get_domain(url=url)
+        self.xpath = xpath_expressions
+
+        self._validate_xpath_dict()
 
     def fetch(self, url, xpath_expression):
         self.browser.get(url)
@@ -19,6 +25,14 @@ class Scraper:
             if data:
                 return data
 
+    def get_total_episodes(self, callback):
+        [response] = self.fetch(
+            url=self.url,
+            xpath_expression=self.xpath['total_episodes']
+        )
+
+        return callback(response)
+
     def _scrape(self, xpath_expression):
         # get the innerhtml from the rendered page
         innerHTML = self.browser.execute_script(
@@ -27,3 +41,11 @@ class Scraper:
         parsed = html.fromstring(innerHTML)
         # Get your element with xpath
         return parsed.xpath(xpath_expression)
+
+    def _validate_xpath_dict(self):
+        keys = ['total_episodes']
+
+        for key in keys:
+            if not key in self.xpath:
+                print(f'Xpath expression "{key}" is required!')
+                sys.exit(1)

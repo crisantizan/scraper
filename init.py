@@ -8,8 +8,10 @@ if __name__ == '__main__':
 
     url = sys.argv[1]
 
-    for scraper in scrapers:
-        if scraper.validateDomain(url):
-            print('Yepe')
+    for Scraper in scrapers:
+        if Scraper.validateDomain(url):
+            scraper = Scraper(url=url, headless=False)
+            scraper.start()
+
         else:
             print('Nope')
