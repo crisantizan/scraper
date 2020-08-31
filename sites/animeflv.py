@@ -38,23 +38,26 @@ class AnimeFlvSite(Scraper, FileManager):
         return f'{url.scheme}://{url.netloc}/ver{path}-{num}'
 
     def start(self):
-        total = self.get_total_episodes(lambda res: int(res.split(' ')[1]))
-        links = self.generate_links(
-            total_episodes=total,
-            callback=self._format_url
-        )
+        scope = self.get_scope()
+        # last = self.get_last_json_item()
+        # total = self.get_total_episodes(lambda res: int(res.split(' ')[1]))
+        # links = self.generate_links(
+        #     total_episodes=total,
+        #     callback=self._format_url
+        # )
+        print(scope)
 
-        for index, link in enumerate(links):
-            d = self.fetch(
-                url=link,
-                xpath_expression='//video/@src',
-                extends={
-                    'frame': '//div[@class="Wrapper"]//div[@id="video_box"]/iframe[1]',
-                    'click_method': EC.element_to_be_clickable((By.ID, "start"))
-                }
-            )
+        # for index, link in enumerate(links):
+        #     d = self.fetch(
+        #         url=link,
+        #         xpath_expression='//video/@src',
+        #         extends={
+        #             'frame': '//div[@class="Wrapper"]//div[@id="video_box"]/iframe[1]',
+        #             'click_method': EC.element_to_be_clickable((By.ID, "start"))
+        #         }
+        #     )
 
-            self.write_in_json(episode=index+1, link=d[0])
-            print(f'Episode {index+1} done')
+        #     self.write_in_json(episode=index+1, link=d[0])
+        #     print(f'Episode {index+1} done')
 
         self.browser.quit()

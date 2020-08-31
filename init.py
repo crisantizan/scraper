@@ -2,11 +2,13 @@ import sys
 
 from sites import AnimeFlvSite
 
+from helper import get_url
+
 if __name__ == '__main__':
     # available scrapers
     scrapers = [AnimeFlvSite]
 
-    url = sys.argv[1]
+    url = get_url()
 
     for Scraper in scrapers:
         if Scraper.validateDomain(url):

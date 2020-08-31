@@ -1,4 +1,5 @@
 from urllib.parse import urlsplit
+import sys
 
 
 def split_url(url):
@@ -11,3 +12,12 @@ def split_url(url):
 		SplitResult: URL parts
 	"""
 	return urlsplit(url)
+
+def get_url():
+	try:
+		link = sys.argv[1]
+		# if there is in the end a "/" remove it
+		return link if not link[-1:] == '/' else link[0:-1]
+	except:
+		print('\nLink of the anime is required!')
+		sys.exit(1)

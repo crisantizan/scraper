@@ -60,11 +60,37 @@ class Scraper():
 
         return links
 
-    def get_scope(self, last_episode):
+    def get_scope(self):
+        scope = None
+
+        # default values
+        start = 0
+        end = -1
+
+        # if the custom scope already passed
         try:
-            sys.argv[1]
+            scope = sys.argv[2]
+            temp = scope.split(':')
+
+            if len(temp) > 0:
+                # verify custom scope
+                for index, val in enumerate(temp):
+                    if not val.isnumeric():
+                        print('\nScope param should be a numeric value')
+                        sys.exit(1)
+
+                    temp[index] = int(temp[index])
+
+                if temp[0] > 1:
+                    start = temp[0] - 1
+
+                if temp[1] and temp[1] > start:
+                    end = temp[1]
+
+            # return values
+            return {'start': start, 'end': end}
         except:
-            return {'start': 0}
+            return {'start': start, 'end': end}
 
     def scrape(self, xpath_expression):
         # get the innerhtml from the rendered page
