@@ -96,7 +96,7 @@ class Scraper():
         length = len(links)
         if (start == 0 and end == -1) or not (start <= length and end <= length):
             # normal, verify last episode
-            if last_episode is None:
+            if last_episode == 0:
                 return [links, 0]
             else:
                 return [links[last_episode:], last_episode]

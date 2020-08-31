@@ -21,7 +21,7 @@ class FileManager:
                 data = json.load(json_file)
                 return data[-1]['episode']
         except:
-            return None
+            return 0
 
     def create_json_file(self):
         try:
