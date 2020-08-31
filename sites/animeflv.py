@@ -1,17 +1,24 @@
 import re
-from core import Scraper, Browser
+from core import Scraper, Browser, FileManager
 
 
-class AnimeFlvSite(Scraper):
+class AnimeFlvSite(Scraper, FileManager):
     domain = 'https://www3.animeflv.net/'
 
     def __init__(self, url, headless=True):
-        super().__init__(
+        Scraper.__init__(
+            self,
             browser=Browser(headless=headless).browser,
             url=url,
             xpath_expressions={
                 'total_episodes': '//ul[@id="episodeList"]/li[@class="fa-play-circle"][1]/a/p/text()'
             },
+        )
+
+        FileManager.__init__(
+            self,
+            folder_name=self.url_parts.netloc,
+            file_name=f'{self.url_parts.path.replace("/anime/", "")}.json'
         )
 
     @classmethod

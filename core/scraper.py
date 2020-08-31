@@ -7,14 +7,16 @@ from lxml import html
 import helper
 
 
-class Scraper:
+class Scraper():
     def __init__(self, browser, url, xpath_expressions):
+        self.url_parts = helper.split_url(url=url)
         self.browser = browser
         self.url = url
-        self.url_parts = helper.split_url(url=url)
         self.xpath = xpath_expressions
 
         self._validate_xpath_dict()
+
+
 
     def fetch(self, url, xpath_expression):
         self.browser.get(url)
@@ -39,6 +41,12 @@ class Scraper:
             links.append(callback(episode, self.url_parts))
 
         return links
+
+    def get_scope(self):
+        try:
+            sys.argv[1]
+        except:
+            return {'start': 0}
 
     def _scrape(self, xpath_expression):
         # get the innerhtml from the rendered page
