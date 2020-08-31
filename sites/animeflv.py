@@ -1,5 +1,12 @@
 import re
+import time
 from core import Scraper, Browser, FileManager
+
+from selenium.webdriver.common.by import By
+
+from selenium.webdriver.support.ui import WebDriverWait
+
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class AnimeFlvSite(Scraper, FileManager):
@@ -36,7 +43,18 @@ class AnimeFlvSite(Scraper, FileManager):
             total_episodes=total,
             callback=self._format_url
         )
-        print(f'TOTAL: {total}')
-        print(links)
+
+        for index, link in enumerate(links):
+            d = self.fetch(
+                url=link,
+                xpath_expression='//video/@src',
+                extends={
+                    'frame': '//div[@class="Wrapper"]//div[@id="video_box"]/iframe[1]',
+                    'click_method': EC.element_to_be_clickable((By.ID, "start"))
+                }
+            )
+
+            self.write_in_json(episode=index+1, link=d[0])
+            print(f'Episode {index+1} done')
 
         self.browser.quit()

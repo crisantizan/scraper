@@ -3,6 +3,7 @@ import os
 import sys
 
 from lxml import html
+from selenium.webdriver.support.ui import WebDriverWait
 
 import helper
 
@@ -16,14 +17,31 @@ class Scraper():
 
         self._validate_xpath_dict()
 
-
-
-    def fetch(self, url, xpath_expression):
+    def fetch(self, url, xpath_expression, extends=None):
         self.browser.get(url)
+
+        if extends:
+            if 'frame' in extends:
+                while True:
+                    try:
+                        self.browser.switch_to_frame(
+                            self.browser.find_element_by_xpath(
+                                extends['frame']
+                            )
+                        )
+                        break
+                    except:
+                        print('Opps! retrying...')
+
+            if 'click_method' in extends:
+                element = WebDriverWait(self.browser, 20).until(
+                    extends['click_method']
+                )
+                element.click()
 
         while True:
             time.sleep(0.5)
-            data = self._scrape(xpath_expression)
+            data = self.scrape(xpath_expression)
             if data:
                 return data
 
@@ -42,13 +60,13 @@ class Scraper():
 
         return links
 
-    def get_scope(self):
+    def get_scope(self, last_episode):
         try:
             sys.argv[1]
         except:
             return {'start': 0}
 
-    def _scrape(self, xpath_expression):
+    def scrape(self, xpath_expression):
         # get the innerhtml from the rendered page
         innerHTML = self.browser.execute_script(
             "return document.body.innerHTML")

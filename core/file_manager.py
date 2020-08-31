@@ -38,7 +38,7 @@ class FileManager:
             os.mkdir(path)
 
     def write_in_json(self, episode, link):
-        with open(self.path, 'w') as json_file:
+        with open(self.path, 'r+') as json_file:
             data = json.load(json_file)
             data.append({'episode': episode, 'link': link})
             json_file.seek(0)
