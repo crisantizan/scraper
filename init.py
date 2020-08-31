@@ -1,12 +1,12 @@
 import sys
 
-from sites import AnimeFlvSite
+from sites import AnimeFlvSite, JkAnimeSite
 
 from helper import get_url
 
 if __name__ == '__main__':
     # available scrapers
-    scrapers = [AnimeFlvSite]
+    scrapers = [AnimeFlvSite, JkAnimeSite]
 
     url = get_url()
 
