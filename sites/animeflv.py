@@ -1,5 +1,6 @@
 import re
 import time
+import sys
 from core import Scraper, Browser, FileManager
 
 from selenium.webdriver.common.by import By
@@ -39,25 +40,36 @@ class AnimeFlvSite(Scraper, FileManager):
 
     def start(self):
         scope = self.get_scope()
-        # last = self.get_last_json_item()
-        # total = self.get_total_episodes(lambda res: int(res.split(' ')[1]))
-        # links = self.generate_links(
-        #     total_episodes=total,
-        #     callback=self._format_url
-        # )
-        print(scope)
+        last = self.get_last_json_item()
+        total = self.get_total_episodes(lambda res: int(res.split(' ')[1]))
+        links = self.generate_links(
+            total_episodes=total,
+            callback=self._format_url
+        )
 
-        # for index, link in enumerate(links):
-        #     d = self.fetch(
-        #         url=link,
-        #         xpath_expression='//video/@src',
-        #         extends={
-        #             'frame': '//div[@class="Wrapper"]//div[@id="video_box"]/iframe[1]',
-        #             'click_method': EC.element_to_be_clickable((By.ID, "start"))
-        #         }
-        #     )
+        [links, last_episode] = self.get_new_links(
+            links=links,
+            last_episode=last,
+            **scope
+        )
 
-        #     self.write_in_json(episode=index+1, link=d[0])
-        #     print(f'Episode {index+1} done')
+        # up to date, stop program
+        if not links:
+            print('\n**** **** You\'re up to date with this anime! **** **** \n')
+            self.browser.quit()
+            sys.exit(0)
+
+        for index, link in enumerate(links, start=last_episode):
+            d = self.fetch(
+                url=link,
+                xpath_expression='//video/@src',
+                extends={
+                    'frame': '//div[@class="Wrapper"]//div[@id="video_box"]/iframe[1]',
+                    'click_method': EC.element_to_be_clickable((By.ID, "start"))
+                }
+            )
+
+            self.write_in_json(episode=index+1, link=d[0])
+            print(f'Episode {index+1} done')
 
         self.browser.quit()

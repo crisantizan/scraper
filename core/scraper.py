@@ -92,6 +92,27 @@ class Scraper():
         except:
             return {'start': start, 'end': end}
 
+    def get_new_links(self, links, last_episode, start, end):
+        length = len(links)
+        if (start == 0 and end == -1) or not (start <= length and end <= length):
+            # normal, verify last episode
+            if last_episode is None:
+                return [links, 0]
+            else:
+                return [links[last_episode:], last_episode]
+
+        if last_episode >= start + 1:
+            if last_episode < end:
+                return [links[last_episode:end], last_episode]
+
+            return [[], start]
+        elif start > 0 and end == -1:
+            # from x to final
+            return [links[start:], start]
+        else:
+            # from x to x
+            return [links[start:end], start]
+
     def scrape(self, xpath_expression):
         # get the innerhtml from the rendered page
         innerHTML = self.browser.execute_script(

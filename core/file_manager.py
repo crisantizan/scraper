@@ -19,7 +19,7 @@ class FileManager:
         try:
             with open(file=self.path, mode='r') as json_file:
                 data = json.load(json_file)
-                return data[-1]
+                return data[-1]['episode']
         except:
             return None
 
