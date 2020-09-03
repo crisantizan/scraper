@@ -31,7 +31,10 @@ class ConfigFile:
             data = {
                 'file': self.links_file,
                 'output_name': self.output_name,
-                'output_folder': self.output_folder
+                'output_folder': os.path.join(
+                    self.output_folder,
+                    self.output_name
+                ),
             }
 
             json.dump(obj=data, fp=f, indent=4)
