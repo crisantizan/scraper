@@ -5,12 +5,12 @@ import sys
 from lxml import html
 from selenium.webdriver.support.ui import WebDriverWait
 
-import helper
+from scripts import Helper
 
 
-class Scraper():
+class Scraper:
     def __init__(self, browser, url, xpath_expressions):
-        self.url_parts = helper.split_url(url=url)
+        self.url_parts = Helper.split_url(url=url)
         self.browser = browser
         self.url = url
         self.xpath = xpath_expressions
