@@ -6,6 +6,8 @@ from .helper import Helper
 
 
 class ConfigFile:
+    config_folder = '.scraper_config_files'
+
     def __init__(self):
         self.links_file = self._get_input_data(
             placeholder='Links file path: ',
@@ -25,7 +27,10 @@ class ConfigFile:
 
     def _write_json(self):
         home_path = str(Path.home())
-        filename_path = os.path.join(home_path, self.config_file)
+        # create folder if not exists
+        Helper.mkdir(os.path.join(home_path, self.config_folder))
+
+        filename_path = os.path.join(home_path, self.config_folder, self.config_file)
 
         with open(file=filename_path, mode='w') as f:
             data = {
