@@ -1,8 +1,17 @@
 import os
 from urllib.parse import urlsplit
+from pathlib import Path
 import sys
 
 class Helper:
+    @classmethod
+    def home_path(self):
+        fullpath = os.path.join(str(Path.home()), '.scraper_config_files')
+        # create folder if not exists
+        self.mkdir(fullpath)
+
+        return fullpath
+
     @classmethod
     def split_url(self, url):
         """Get domain from url

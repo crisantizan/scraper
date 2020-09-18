@@ -6,12 +6,9 @@ from .helper import Helper
 
 
 class ConfigFile:
-    config_folder = '.scraper_config_files'
 
     def __init__(self):
-        self.home_path = os.path.join(str(Path.home()), self.config_folder)
-        # create folder if not exists
-        Helper.mkdir(self.home_path)
+        self.home_path = Helper.home_path()
 
     @property
     def config_file(self):

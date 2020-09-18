@@ -91,14 +91,19 @@ class Download:
 
 
     def _get_config_file_path(self):
-        path = sys.argv[1]
+        config_file_name = sys.argv[1]
 
-        if not path:
+        if not config_file_name:
             print('Config file path is required!')
             sys.exit(0)
 
-        if not Helper.path_exists(path):
+        config_file_path = os.path.join(
+            Helper.home_path(),
+            f'{config_file_name}.config.json'
+        )
+
+        if not Helper.path_exists(config_file_path):
             print('Config file not found')
             sys.exit(0)
 
-        return path
+        return config_file_path
