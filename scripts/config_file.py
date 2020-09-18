@@ -9,6 +9,15 @@ class ConfigFile:
     config_folder = '.scraper_config_files'
 
     def __init__(self):
+        self.home_path = os.path.join(str(Path.home()), self.config_folder)
+        # create folder if not exists
+        Helper.mkdir(self.home_path)
+
+    @property
+    def config_file(self):
+        return f"{self.output_name.lower().replace(' ', '-')}.config.json"
+
+    def _get_data(self):
         self.links_file = self._get_input_data(
             placeholder='Links file path: ',
             cb=self._validate_links_file
@@ -21,16 +30,8 @@ class ConfigFile:
             cb=self._validate_output_folder
         )
 
-    @property
-    def config_file(self):
-        return f"{self.output_name.lower().replace(' ', '-')}.config.json"
-
     def _write_json(self):
-        home_path = str(Path.home())
-        # create folder if not exists
-        Helper.mkdir(os.path.join(home_path, self.config_folder))
-
-        filename_path = os.path.join(home_path, self.config_folder, self.config_file)
+        filename_path = os.path.join(self.home_path, self.config_file)
 
         with open(file=filename_path, mode='w') as f:
             data = {
@@ -46,8 +47,24 @@ class ConfigFile:
             print('\nConfig file created successfully!')
             print(f'Find it in: {filename_path}\n')
 
-    def generate(self):
-        self._write_json()
+    def generate(self, mode='create'):
+        if mode == 'create':
+            self._get_data()
+            self._write_json()
+        else:
+            self._list()
+
+    def _list(self):
+        files = os.listdir(self.home_path)
+
+        if not files:
+            return print('Nothing here...')
+
+        n = 1
+        for filename in files:
+            print(f"{n} - {filename.replace('.config.json', '')}")
+            n+=1
+
 
     def _validate_output_folder(self, folder_path):
         if not Helper.path_exists(folder_path):
